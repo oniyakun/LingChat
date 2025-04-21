@@ -108,7 +108,11 @@ IF %ERRORLEVEL% NEQ 0 (
 ECHO Virtual environment activated.
 
 :RunBackend
-:: 2. 运行后端 Python 脚本 (在单独的窗口中，保持打开)
+:: 确保安装所有Python依赖
+ECHO Installing additional Python dependencies...
+pip install -r backend\requirements.txt
+
+:: 运行后端 Python 脚本 (在单独的窗口中，保持打开)
 ECHO Starting Python backend (%BACKEND_SCRIPT%)...
 IF NOT EXIST %BACKEND_SCRIPT% (
    ECHO ERROR: Backend script not found at %BACKEND_SCRIPT%
@@ -121,7 +125,7 @@ START "LingChat Backend" cmd /k "%VENV_DIR%\Scripts\python.exe %BACKEND_SCRIPT%"
 ECHO Backend process started in a separate window. Waiting a few seconds...
 TIMEOUT /T 5 /NOBREAK > NUL
 
-:: 3. 运行前端 Node.js 脚本 (在单独的窗口中，保持打开)
+:: 4. 运行前端 Node.js 脚本 (在单独的窗口中，保持打开)
 ECHO Starting Node.js frontend (%FRONTEND_SCRIPT%)...
 IF NOT EXIST %FRONTEND_SCRIPT% (
    ECHO ERROR: Frontend script not found at %FRONTEND_SCRIPT%
@@ -135,8 +139,16 @@ IF %ERRORLEVEL% NEQ 0 (
     PAUSE
     EXIT /B 1
 )
+
+:: 安装前端依赖
+ECHO Installing frontend dependencies...
+cd frontend
+call npm cache clean --force
+call npm install
+cd ..
+
 ECHO Launching frontend in a new window titled "LingChat Frontend" (Window will stay open)...
-START "LingChat Frontend" cmd /k "node %FRONTEND_SCRIPT%"
+START "LingChat Frontend" cmd /k "cd frontend && node %FRONTEND_SCRIPT:frontend\=%"
 ECHO Frontend process started in a separate window. Waiting a few seconds...
 TIMEOUT /T 3 /NOBREAK > NUL
 

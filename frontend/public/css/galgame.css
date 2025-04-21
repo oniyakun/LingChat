@@ -450,3 +450,48 @@ select {
 .bubble.happy {
   transform: scale(1);
 }
+
+.mic-button {
+  position: absolute;
+  right: 50px;
+  bottom: 13px;
+  background: none;
+  border: none;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.7;
+}
+
+.mic-button:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.mic-button:focus {
+  outline: none;
+}
+
+.mic-button.recording {
+  animation: pulse 1.5s infinite;
+}
+
+.mic-button.recording img {
+  filter: drop-shadow(0 0 5px red);
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}

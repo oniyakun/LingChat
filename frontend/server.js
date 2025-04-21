@@ -1,7 +1,8 @@
 const express = require("express");
-const http = require("http");
+const http = require("node:http");
 const WebSocket = require("ws");
-const path = require("path");
+const path = require("node:path");
+const fs = require("node:fs");
 
 const app = express();
 const server = http.createServer(app);
@@ -67,11 +68,11 @@ function connectToPython() {
       }
 
       // 直接转发，不修改顺序
-      wss.clients.forEach((client) => {
+      for (const client of wss.clients) {
         if (client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify(data));
         }
-      });
+      }
     } catch (e) {
       console.error("处理Python响应出错:", e);
     }
