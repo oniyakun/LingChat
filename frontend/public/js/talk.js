@@ -176,7 +176,7 @@ socket.addEventListener("message", (event) => {
   }
 });
 
-let numSpeed = localStorage.getItem("numSpeed") || "50"; // 默认中等速度
+let numSpeed = 200 - Number.parseInt(localStorage.getItem("numSpeed") || "50", 10); // 将存储的速度值转换为延迟值
 
 function changeEmotion(emotion) {
   changeExpression(emotion);
@@ -188,9 +188,9 @@ function changeExpression(emotion) {
   const config = expressionConfig[emotion];
 
   // 移除所有动画类（从统一配置中获取）
-  Object.values(expressionConfig).forEach(({ animation }) => {
+  for (const { animation } of Object.values(expressionConfig)) {
     characterContainer.classList.remove(animation);
-  });
+  }
 
   // 如果有新图片则更换
 
@@ -468,8 +468,9 @@ function sendOrContinue() {
 
 // 暴露设置速度的函数
 function setTextSpeed(speed) {
-  numSpeed = speed;
-  localStorage.setItem("numSpeed", numSpeed);
+  // 现在 speed 参数是延迟值（actualDelay）而不是速度值
+  numSpeed = Number.parseInt(speed, 10); // 确保转为整数
+  localStorage.setItem("numSpeed", (200 - numSpeed).toString()); // 存储速度值，保持 UI 一致性
 }
 
 // 暴露自动阅读设置函数

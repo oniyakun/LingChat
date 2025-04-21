@@ -295,7 +295,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   
   // 定义全局变量numSpeed
-  let numSpeed = 50;
+  let numSpeed = parseInt(localStorage.getItem("numSpeed") || "50", 10); // 确保为整数
   
   // 文字速度测试
   function testTextSpeed() {
@@ -1010,12 +1010,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 应用文字速度
   function applyTextSpeed(speed) {
-    numSpeed = parseInt(speed);
+    numSpeed = Number.parseInt(speed, 10); // 使用 Number.parseInt 代替 parseInt
     // 在这里更新talk.js中的速度设置
     // 值为0时对应200ms延迟（最慢），值为200时对应10ms延迟（最快）
     const actualDelay = 200 - numSpeed;
-    setTextSpeed(actualDelay);
-    console.log(`文字速度设置为: ${speed}，实际延迟: ${actualDelay}ms`);
+    setTextSpeed(actualDelay); // 传递正确的延迟值，而不是速度值
+    console.log(`文字速度设置为: ${numSpeed}，实际延迟: ${actualDelay}ms`);
   }
 
   // 添加缺失的updatePreviewBackground函数定义
