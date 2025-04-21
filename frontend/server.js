@@ -12,7 +12,7 @@ require('dotenv').config();
 const ADDR = process.env.FRONTEND_ADDR || "localhost";
 const BIND_ADDR = process.env.FRONTEND_BIND_ADDR || "0.0.0.0";
 const PORT = process.env.FRONTEND_PORT || 3000;
-const BACKEND_ADDR = process.env.BACKEND_ADDR || "localhost";
+const BACKEND_ADDR = process.env.BACKEND_ADDR || "0.0.0.0";
 const BACKEND_PORT = process.env.BACKEND_PORT || 8765;
 
 // 静态文件服务

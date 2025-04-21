@@ -1,7 +1,9 @@
 import os
-import json
+import re
 import asyncio
+import json
 import websockets
+from dotenv import load_dotenv # 新增导入
 import glob
 from deepseek import DeepSeek
 import re
@@ -19,7 +21,14 @@ langDetect = LangDetect()
 tts_engine = VitsTTS(
     #enbale=False      #如果你没有配置simple-voice-api，请去掉这一行最开始的#号
 )
-temp_voice_dir = "./frontend/public/audio"
+# 加载环境变量
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
+
+# 计算项目根目录
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+# 直接定义绝对路径
+temp_voice_dir = os.path.join(project_root, 'frontend', 'public', 'audio')
+# 确保目录存在
 os.makedirs(temp_voice_dir, exist_ok=True)
 
 # ANSI 颜色代码

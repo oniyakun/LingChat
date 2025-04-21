@@ -293,7 +293,8 @@ function displayMessage(data) {
   // 处理音频播放
   if (data.audioFile) {
     audioStatus.textContent = "准备播放音频...";
-    const audioUrl = `../audio/${data.audioFile}`;
+    // 使用相对于 public 目录的正确路径
+    const audioUrl = `/audio/${data.audioFile}`;
 
     audioPlayer.src = audioUrl;
     audioPlayer.load();
