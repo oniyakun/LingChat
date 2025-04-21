@@ -136,6 +136,21 @@ let lastEmotion = "正常";
 let autoReadEnabled = localStorage.getItem("autoReadEnabled") === "true" || false;
 let autoReadInterval = Number.parseInt(localStorage.getItem("autoReadInterval") || "2000", 10);
 let autoReadTimer = null;
+let autoRecordEnabled = localStorage.getItem("autoRecordEnabled") === "true" || false;
+let voiceRecorder = null;
+
+// 在DOMContentLoaded后初始化语音录制器引用
+document.addEventListener('DOMContentLoaded', () => {
+  // voice.js已经将VoiceRecorder实例保存到全局对象
+  setTimeout(() => {
+    if (window.voiceRecorderInstance) {
+      voiceRecorder = window.voiceRecorderInstance;
+      console.log("获取到语音录制器引用");
+    } else {
+      console.log("未找到语音录制器实例");
+    }
+  }, 1000); // 延迟1秒，确保VoiceRecorder已初始化
+});
 
 socket.addEventListener("open", (event) => {
   statusDiv.textContent = "已连接到服务器";
@@ -359,6 +374,14 @@ function handleContinue() {
     addToHistory(null, null, true);
     enableInput(); // 重新启用输入框
     isWaitingForResponse = false; // AI已回复
+    
+    // 自动开始录音
+    if (autoRecordEnabled && voiceRecorder) {
+      // 短暂延迟后开始录音，给用户反应时间
+      setTimeout(() => {
+        voiceRecorder.startRecording();
+      }, 500);
+    }
   } else {
     // 处理下一条消息
     processNextMessage();
@@ -379,6 +402,12 @@ function enableAutoRead(enabled) {
 function setAutoReadInterval(interval) {
   autoReadInterval = interval;
   localStorage.setItem("autoReadInterval", interval);
+}
+
+// 设置自动录音
+function enableAutoRecord(enabled) {
+  autoRecordEnabled = enabled;
+  localStorage.setItem("autoRecordEnabled", enabled);
 }
 
 // 处理自动阅读
@@ -463,6 +492,11 @@ function updateAutoReadSettings(enabled, interval) {
       setupAutoRead();
     }
   }
+}
+
+// 暴露自动录音设置函数
+function updateAutoRecordSettings(enabled) {
+  enableAutoRecord(enabled);
 }
 
 // 发送按钮点击事件

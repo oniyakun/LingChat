@@ -14,6 +14,9 @@ class VoiceRecorder {
     
     // 初始化
     this.init();
+    
+    // 保存实例到全局对象，以便其他模块可以访问
+    window.voiceRecorderInstance = this;
   }
   
   // 初始化语音识别API
