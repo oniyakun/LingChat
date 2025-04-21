@@ -22,6 +22,7 @@ frontend/node_modules/
 
 # Ignore model files
 *.safetensors
+vits/
 
 # Ignore logs
 logs/*.log
