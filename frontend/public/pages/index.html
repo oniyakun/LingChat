@@ -93,6 +93,23 @@
                   </div>
                 </div>
                 <div class="menu-item">
+                  <h4>自动阅读下一条</h4>
+                  <div class="toggle-container">
+                    <input type="checkbox" id="auto-read-toggle" />
+                    <label for="auto-read-toggle">自动阅读</label>
+                  </div>
+                  <div id="auto-read-interval-container" style="margin-top: 10px; display: none;">
+                    <div class="slider-container" style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 5px;">
+                      <span style="flex: 0 0 25px; text-align: left; padding-right: 5px;">短</span>
+                      <input id="auto-read-interval" type="range" min="1000" max="5000" step="500" value="2000" style="width: 95% !important; flex: 1 1 auto !important; margin: 0 !important; padding: 0 !important;" />
+                      <span style="flex: 0 0 25px; text-align: right; padding-left: 5px;">长</span>
+                    </div>
+                    <div style="text-align: center; margin-top: 5px; font-size: 0.8em; color: #666;">
+                      间隔: <span id="auto-read-interval-value">2000</span>毫秒
+                    </div>
+                  </div>
+                </div>
+                <div class="menu-item">
                   <h4>当前AI模型</h4>
                   <div class="model-selection-container">
                     <select id="ai-model-select" style="display: none">

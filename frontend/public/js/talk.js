@@ -133,6 +133,9 @@ let isProcessing = false;
 let currentMessagePart = null;
 let isWaitingForResponse = false; // 新增：等待AI回复标志
 let lastEmotion = "正常";
+let autoReadEnabled = localStorage.getItem("autoReadEnabled") === "true" || false;
+let autoReadInterval = Number.parseInt(localStorage.getItem("autoReadInterval") || "2000", 10);
+let autoReadTimer = null;
 
 socket.addEventListener("open", (event) => {
   statusDiv.textContent = "已连接到服务器";
@@ -312,6 +315,7 @@ function displayMessage(data) {
 
     audioPlayer.onended = () => {
       audioStatus.textContent = "";
+      setupAutoRead(); // 音频播放结束后检查自动阅读
     };
   } else {
     // 如果是最后一条消息，显示不同提示
@@ -320,6 +324,7 @@ function displayMessage(data) {
     } else {
       audioStatus.textContent = "按Enter或发送按钮继续...";
     }
+    setupAutoRead(); // 没有音频时直接检查自动阅读
   }
 }
 
@@ -360,6 +365,48 @@ function handleContinue() {
   }
 }
 
+// 自动阅读下一条消息的功能
+function enableAutoRead(enabled) {
+  autoReadEnabled = enabled;
+  localStorage.setItem("autoReadEnabled", enabled);
+  if (!enabled && autoReadTimer) {
+    clearTimeout(autoReadTimer);
+    autoReadTimer = null;
+  }
+}
+
+// 设置自动阅读间隔
+function setAutoReadInterval(interval) {
+  autoReadInterval = interval;
+  localStorage.setItem("autoReadInterval", interval);
+}
+
+// 处理自动阅读
+function setupAutoRead() {
+  if (autoReadEnabled && isProcessing) {
+    // 如果有音频播放，则不自动阅读
+    if (audioPlayer.paused === false) {
+      // 监听音频播放结束后自动阅读
+      audioPlayer.onended = () => {
+        audioStatus.textContent = "";
+        if (autoReadEnabled && isProcessing) {
+          autoReadTimer = setTimeout(() => {
+            handleContinue();
+          }, autoReadInterval);
+        }
+      };
+    } else {
+      // 没有音频播放，设置定时器
+      if (autoReadTimer) {
+        clearTimeout(autoReadTimer);
+      }
+      autoReadTimer = setTimeout(() => {
+        handleContinue();
+      }, autoReadInterval);
+    }
+  }
+}
+
 // 发送消息或继续对话
 function sendOrContinue() {
   const message = inputMessage.value.trim();
@@ -394,6 +441,28 @@ function sendOrContinue() {
 function setTextSpeed(speed) {
   numSpeed = speed;
   localStorage.setItem("numSpeed", numSpeed);
+}
+
+// 暴露自动阅读设置函数
+function updateAutoReadSettings(enabled, interval) {
+  if (enabled !== null) {
+    enableAutoRead(enabled);
+  }
+  
+  if (interval) {
+    setAutoReadInterval(interval);
+    
+    // 更新间隔时间后，如果自动阅读已启用且正在处理消息，重置定时器
+    if (autoReadEnabled && isProcessing) {
+      if (autoReadTimer) {
+        clearTimeout(autoReadTimer);
+        autoReadTimer = null;
+      }
+      
+      // 重新设置定时器
+      setupAutoRead();
+    }
+  }
 }
 
 // 发送按钮点击事件

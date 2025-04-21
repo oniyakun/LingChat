@@ -452,9 +452,10 @@ select {
 }
 
 .mic-button {
+  align-self: flex-end;
   position: absolute;
-  right: 50px;
-  bottom: 13px;
+  padding: 15px 20px;
+  border-radius: 5px;
   background: none;
   border: none;
   width: 30px;
@@ -465,6 +466,8 @@ select {
   cursor: pointer;
   transition: all 0.3s ease;
   opacity: 0.7;
+  z-index: 10; /* 确保按钮在上层 */
+  color: rgb(4, 188, 255); /* 设置颜色 */
 }
 
 .mic-button:hover {
@@ -482,6 +485,10 @@ select {
 
 .mic-button.recording img {
   filter: drop-shadow(0 0 5px red);
+}
+
+.mic-button img {
+  filter: invert(48%) sepia(82%) saturate(1982%) hue-rotate(165deg) brightness(103%) contrast(101%); /* 将SVG图标变为蓝色 */
 }
 
 @keyframes pulse {

@@ -782,6 +782,44 @@ document.addEventListener("DOMContentLoaded", function () {
     applyTextSpeed(savedSpeed);
     testTextSpeed();
 
+    // 自动阅读设置
+    const autoReadToggle = document.getElementById("auto-read-toggle");
+    const autoReadIntervalContainer = document.getElementById("auto-read-interval-container");
+    const autoReadIntervalSlider = document.getElementById("auto-read-interval");
+    const autoReadIntervalValue = document.getElementById("auto-read-interval-value");
+    
+    if (autoReadToggle && autoReadIntervalContainer && autoReadIntervalSlider && autoReadIntervalValue) {
+      // 读取保存的设置
+      const autoReadEnabled = localStorage.getItem("autoReadEnabled") === "true" || false;
+      const autoReadInterval = localStorage.getItem("autoReadInterval") || "2000";
+      
+      // 设置界面状态
+      autoReadToggle.checked = autoReadEnabled;
+      autoReadIntervalSlider.value = autoReadInterval;
+      autoReadIntervalValue.textContent = autoReadInterval;
+      autoReadIntervalContainer.style.display = autoReadEnabled ? "block" : "none";
+      
+      // 监听自动阅读开关变化
+      autoReadToggle.addEventListener("change", function() {
+        const enabled = this.checked;
+        autoReadIntervalContainer.style.display = enabled ? "block" : "none";
+        // 应用设置
+        updateAutoReadSettings(enabled, null);
+      });
+      
+      // 监听自动阅读间隔变化
+      autoReadIntervalSlider.addEventListener("input", function() {
+        const interval = this.value;
+        autoReadIntervalValue.textContent = interval;
+      });
+      
+      autoReadIntervalSlider.addEventListener("change", function() {
+        const interval = this.value;
+        // 应用设置
+        updateAutoReadSettings(null, interval);
+      });
+    }
+
     // AI模型设置 - 从后端获取
     const modelStatus = document.getElementById('model-status');
     const modelSelect = document.getElementById('ai-model-select');
